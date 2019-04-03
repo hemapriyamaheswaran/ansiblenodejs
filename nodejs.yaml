@@ -1,0 +1,76 @@
+---
+- hosts: all
+  gather_facts: yes
+  become: yes
+  vars:
+    NODEJS_VERSION: "8"
+    ansible_distribution_release: "xenial"
+  tasks:
+    - name: Install the nodejs
+      yum:
+        name: nodejs
+        state: present
+      when: ansible_os_family == 'Redhat'
+    
+    - template:
+        src: hello.js
+        dest: /root
+        owner: root
+        group: root
+        mode: 0644
+      when: ansible_os_family == 'Redhat'
+
+    - name: install pm2
+      command: bash -lc "cd /root &&  npm install pm2 -g"
+      when: ansible_os_family == 'Redhat'
+
+    - name: stop server
+      command: bash -lc "cd /root && pm2 stop hello.js"
+      when: ansible_os_family == 'Redhat'
+
+    - name: start server
+      command: bash -lc "cd /root && pm2 start hello.js"
+      when: ansible_os_family == 'Redhat'
+
+    - name: Install the nodejs
+      apt:
+        name: nodejs
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - template:
+        src: hello.js
+        dest: /root
+        owner: root
+        group: root
+        mode: 0644
+      when: ansible_os_family == 'Debian'
+
+
+    - name: update
+      command: bash -lc "cd /root &&  apt-get update -y"
+      when: ansible_os_family == 'Debian'
+
+    - name: Install the npm
+      apt:
+        name: npm
+        state: present
+      when: ansible_os_family == 'Debian' 
+
+    - name: stop server
+      command: bash -lc "cd /root && pm2 stop hello.js"
+      when: ansible_os_family == 'Debian'
+
+    - name: install pm2
+      command: bash -lc "cd /root && npm install pm2 -g"
+      when: ansible_os_family == 'Debian'
+
+    - name: start server
+      command: bash -lc "cd /root && pm2 start hello.js"
+      when: ansible_os_family == 'Debian'
+
+
+
+
+
+
