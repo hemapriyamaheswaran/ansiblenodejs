@@ -10,7 +10,7 @@
       yum:
         name: nodejs
         state: present
-      when: ansible_os_family == 'Redhat'
+      when: ansible_os_family == 'RedHat'
     
     - template:
         src: hello.js
@@ -18,19 +18,19 @@
         owner: root
         group: root
         mode: 0644
-      when: ansible_os_family == 'Redhat'
+      when: ansible_os_family == 'RedHat'
 
     - name: install pm2
       command: bash -lc "cd /root &&  npm install pm2 -g"
-      when: ansible_os_family == 'Redhat'
+      when: ansible_os_family == 'RedHat'
 
     - name: stop server
       command: bash -lc "cd /root && pm2 stop hello.js"
-      when: ansible_os_family == 'Redhat'
+      when: ansible_os_family == 'RedHat'
 
     - name: start server
       command: bash -lc "cd /root && pm2 start hello.js"
-      when: ansible_os_family == 'Redhat'
+      when: ansible_os_family == 'RedHat'
 
     - name: Install the nodejs
       apt:
