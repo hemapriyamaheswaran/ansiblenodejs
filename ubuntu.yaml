@@ -1,0 +1,32 @@
+---
+- hosts: 192.168.1.76
+  gather_facts: yes
+  become: yes
+  vars:
+    NODEJS_VERSION: "8"
+    ansible_distribution_release: "xenial"
+  tasks:
+    - name: Install the nodejs
+      apt:
+        name: nodejs*
+        state: present
+    - name: update
+      command: bash -lc "cd /root &&  apt-get update -y"
+    - name: Install the npm
+      apt:
+        name: npm
+        state: present
+    - template:
+        src: hello.js
+        dest: /root
+        owner: root
+        group: root
+        mode: 0644
+    - name: stop server
+      command: bash -lc "cd /root && pm2 stop hello.js"
+    - name: install npm
+      command: bash -lc "cd /root && npm install"
+    - name: install pm2
+      command: bash -lc "cd /root && npm install pm2 -g"
+    - name: start server
+      command: bash -lc "cd /root && pm2 start hello.js"
