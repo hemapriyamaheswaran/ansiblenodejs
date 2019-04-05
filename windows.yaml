@@ -1,0 +1,23 @@
+---
+- hosts: win
+  roles:
+    - chocolatey
+  tasks:
+    - name: Install nodejs
+      win_command: powershell.exe choco install nodejs -y
+
+    - name: copy hello.js
+      win_copy:
+        src: /root/templates/hello.js
+        dest: C:\Program Files\nodejs\hello.js
+    - name: stop hello.js
+      win_command: powershell.exe Stop-Process -processname node*
+
+    - name: install npm
+      win_command: powershell.exe npm install
+
+    - name: install pm2
+      win_command: powershell.exe npm install pm2 -g
+
+    - name: start hello.js
+      win_command: powershell.exe pm2 start hello.js
